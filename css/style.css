@@ -1,0 +1,49 @@
+.game-canvas {
+  display: flex;
+  background-color: aqua;
+  gap: 10px;
+  padding: 25px;
+  max-width: 1000px;
+}
+
+.game-board {
+  position: relative;
+  width: 578px;
+  height: 850px;
+  min-width: 578px;
+  min-height: 850px;
+  background-color: white;
+  border: 1px solid black;
+}
+
+.overall-info {
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+}
+
+.next-piece {
+  margin-top: 25px;
+  width: 150px;
+  height: 150px;
+  background-color: white;
+  border-radius: 10px;
+  position: relative;
+}
+
+.next-piece-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.square {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border-radius: 5px;
+  margin: 2px;
+}
