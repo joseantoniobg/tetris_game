@@ -18,6 +18,9 @@ function handleKeyPress(event) {
     case 'ArrowRight':
       moveRight();
       break;
+    case 'z':
+      moveAllTheWay();
+      break;
   }
 }
 

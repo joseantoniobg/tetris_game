@@ -15,11 +15,21 @@ function rotatePiece() {
   board.tetraPieces[currentPieceIndex].rotate();
 }
 
-function drawBoard(newPice = false) {
-  if (!newPice) {
+function drawCurrentPieceBoard(newPice = false) {
+  if (!newPice && boardElement.children.length >= 4) {
     [...boardElement.children].slice(-4).forEach(boardElement.removeChild.bind(boardElement));
   }
   board.tetraPieces[currentPieceIndex].squares.forEach(square => boardElement.append(square.createSquare(pieceSize, pieceMargin)));
+}
+
+function drawFullBoard() {
+  resetBoard();
+  board.tetraPieces.forEach(piece => piece.squares.forEach(square => boardElement.append(square.createSquare(pieceSize, pieceMargin))));
+}
+
+function drawExclusionLine(line) {
+  resetBoard();
+  board.tetraPieces.forEach(piece => piece.squares.forEach(square => boardElement.append(square.createSquare(pieceSize, pieceMargin, square.y === line))));
 }
 
 function drawNextPiece() {
@@ -36,44 +46,71 @@ function resetBoard() {
 }
 
 function moveDown() {
-  board.tetraPieces.forEach(piece => piece.move('down'));
+  board.tetraPieces[currentPieceIndex].move('down');
+}
+
+function moveAllTheWay() {
+  while (board.tetraPieces[currentPieceIndex].moving) {
+    board.tetraPieces[currentPieceIndex].move('down');
+  }
 }
 
 function moveLeft() {
-  board.tetraPieces.forEach(piece => piece.move('left'));
+  board.tetraPieces[currentPieceIndex].move('left');
 }
 
 function moveRight() {
-  board.tetraPieces.forEach(piece => piece.move('right'));
-}
-
-function checkFullLines() {
-  const fullLines = [];
-  for (let i = 0; i < piecesYSize; i++) {
-
-  }
-  return fullLines;
+  board.tetraPieces[currentPieceIndex].move('right');
 }
 
 function redrawScreen() {
-  clearInterval(gameInterval);
-  gameInterval = setInterval(() => {
+  gameInterval = setInterval(async () => {
     if(gameStarted) {
       if (!nextPiece) {
         resetBoard();
         addNewPiece();
         drawNextPiece();
       }
-      drawBoard();
+      drawCurrentPieceBoard();
       moveDown();
       if (!board.tetraPieces[currentPieceIndex].moving) {
+        verifyFullLine();
         increaseSpeed();
         addNewPiece();
-        drawBoard(true);
+        drawCurrentPieceBoard(true);
         drawNextPiece();
       }
     }
   }, gameSpeedDelay);
+}
+
+const delay = (ms) => {
+  const startPoint = new Date().getTime()
+  while (new Date().getTime() - startPoint <= ms) {/* wait */}
+}
+
+function animateLineExclusion(line) {
+  for (let i = 0; i < 2; i++) {
+    drawExclusionLine(line);
+    delay(200);
+    drawFullBoard();
+    delay(200);
+  }
+}
+
+function verifyFullLine() {
+  let fullLine = usedXSpaces.findIndex(line => line === piecesXSize);
+  while (fullLine >= 0) {
+    score += 100;
+    animateLineExclusion(fullLine);
+    board.tetraPieces.forEach(piece => piece.eliminateSquares(fullLine));
+    board.tetraPieces.filter(piece => piece.squares.length > 0);
+    board.tetraPieces.forEach(piece => piece.reposition(fullLine));
+    usedXSpaces.splice(fullLine, 1);
+    usedXSpaces.unshift(0);
+    drawFullBoard();
+    fullLine = usedXSpaces.findIndex(line => line === piecesXSize);
+  }
 }
 
 function startGame() {

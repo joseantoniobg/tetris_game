@@ -19,6 +19,22 @@ class TetraPiece {
     return new TetraPiece(board, tetrisPieces[pieceModel][angle].map(p => ({ x: p.x + initialPosition, y: p.y })), getRandomColor(), angle, pieceModel, tetrisPieces[pieceModel].length);
   }
 
+  eliminateSquares(x) {
+    this.squares = this.squares.filter(p => p.y !== x);
+  }
+
+  reposition(x) {
+    for (let i = 0; i < this.squares.length; i++) {
+      this.squares[i].y += this.squares[i].y < x ? 1 : 0;
+    }
+  }
+
+  setUsedPositions() {
+    this.squares.forEach(p => {
+      usedXSpaces[p.y] += 1;
+    });
+  }
+
   stopMoving(direction) {
     const { tetraPieces, piecesXSize, piecesYSize } = this.board;
 
@@ -29,13 +45,15 @@ class TetraPiece {
     switch (direction) {
       case 'down':
       if (this.squares.find(p => p.y + 1 >= piecesYSize)) {
+        this.setUsedPositions();
         this.moving = false;
         return true;
       }
 
-      for (const tetraPiece of this.board.tetraPieces.slice(0, this.board.tetraPieces.length - 1)) {
+      for (const tetraPiece of tetraPieces.slice(0, tetraPieces.length - 1)) {
         for (const square of tetraPiece.squares) {
           if (this.squares.find(p => p.x === square.x && square.y === p.y + 1)) {
+            this.setUsedPositions();
             this.moving = false;
             return true;
           }
@@ -48,7 +66,7 @@ class TetraPiece {
           return true;
         }
 
-        for (const tetraPiece of this.board.tetraPieces.slice(0, this.board.tetraPieces.length - 1)) {
+        for (const tetraPiece of tetraPieces.slice(0, tetraPieces.length - 1)) {
           for (const square of tetraPiece.squares) {
             if (this.squares.find(p => Math.ceil(p.x) === square.x + 1 && square.y === Math.ceil(p.y))) {
               return true;
@@ -58,12 +76,11 @@ class TetraPiece {
         break;
 
       case 'right':
-        console.log(this.squares);
         if (this.squares.find(p => p.x + 1 >= piecesXSize)) {
           return true;
         }
 
-        for (const tetraPiece of this.board.tetraPieces.slice(0, this.board.tetraPieces.length - 1)) {
+        for (const tetraPiece of tetraPieces.slice(0, tetraPieces.length - 1)) {
           for (const square of tetraPiece.squares) {
             if (this.squares.find(p => Math.ceil(p.x) === square.x - 1 && square.y === Math.ceil(p.y))) {
               return true;
@@ -82,11 +99,15 @@ class TetraPiece {
 
   rotate() {
     this.currentAngle = this.currentAngle === this.totalPositions - 1 ? 0 : this.currentAngle + 1;
-    const currentX = this.squares[0].x;
+    const currentX = this.squares.reduce((a, b) => b.x < a ? b.x : a, this.squares[0].x);
     const currentY = this.squares[0].y;
     this.squares = [];
     tetrisPieces[this.pieceModel][this.currentAngle].forEach((square) => {
       this.squares.push(new Square(this.color, square.x + currentX, square.y + currentY));
     });
+
+    while (this.squares.find(p => p.x >= this.board.piecesXSize)) {
+      this.move('left');
+    }
   }
 }

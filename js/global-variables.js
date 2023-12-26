@@ -9,8 +9,6 @@ const piecesXSize = boardWidth / totalPiecelength;
 const piecesYSize = boardHeight / totalPiecelength;
 const initialPosition = Math.floor(piecesXSize / 2);
 
-console.log(totalPiecelength, piecesXSize, piecesYSize, initialPosition);
-
 const boardElement = document.getElementById('board');
 const nextPieceElement = document.getElementById('nextPieceContainer');
 const startGameElement = document.getElementById('startGame');
@@ -72,10 +70,10 @@ const TPiece = [
    { x: 0, y: 1 },
    { x: 1, y: 1 },
    { x: 2, y: 1 },],
-   [{ x: -1, y: 0 },
-    { x: -1, y: 1 },
-    { x: -1, y: 2 },
-    { x: 0, y: 1 },],
+   [{ x: 0, y: 0 },
+    { x: 0, y: 1 },
+    { x: 0, y: 2 },
+    { x: 1, y: 1 },],
   [{ x: 0, y: 0 },
     { x: 1, y: 0 },
     { x: 2, y: 0 },
@@ -115,3 +113,5 @@ const pieceYmovement = 0.25;
 let score = 0;
 
 let gameStarted = false;
+
+let usedXSpaces = Array(piecesYSize).fill(0);
