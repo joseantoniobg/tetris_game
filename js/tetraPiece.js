@@ -35,6 +35,24 @@ class TetraPiece {
     });
   }
 
+  checkMoving(tetraPieces) {
+    if (this.squares.find(p => p.y + 1 >= piecesYSize)) {
+      this.setUsedPositions();
+      this.moving = false;
+      return true;
+    }
+
+    for (const tetraPiece of tetraPieces.slice(0, tetraPieces.length - 1)) {
+      for (const square of tetraPiece.squares) {
+        if (this.squares.find(p => p.x === square.x && square.y === p.y + 1)) {
+          this.setUsedPositions();
+          this.moving = false;
+          return true;
+        }
+      }
+    }
+  }
+
   stopMoving(direction) {
     const { tetraPieces, piecesXSize, piecesYSize } = this.board;
 
@@ -44,21 +62,7 @@ class TetraPiece {
 
     switch (direction) {
       case 'down':
-      if (this.squares.find(p => p.y + 1 >= piecesYSize)) {
-        this.setUsedPositions();
-        this.moving = false;
-        return true;
-      }
-
-      for (const tetraPiece of tetraPieces.slice(0, tetraPieces.length - 1)) {
-        for (const square of tetraPiece.squares) {
-          if (this.squares.find(p => p.x === square.x && square.y === p.y + 1)) {
-            this.setUsedPositions();
-            this.moving = false;
-            return true;
-          }
-        }
-      }
+      this.checkMoving(tetraPieces);
       break;
 
       case 'left':
