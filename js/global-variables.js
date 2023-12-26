@@ -13,6 +13,7 @@ console.log(totalPiecelength, piecesXSize, piecesYSize, initialPosition);
 
 const boardElement = document.getElementById('board');
 const nextPieceElement = document.getElementById('nextPieceContainer');
+const startGameElement = document.getElementById('startGame');
 
 const board = {
   piecesXSize,
@@ -57,14 +58,6 @@ const IPiece = [
    { x: 1, y: 0 },
    { x: 2, y: 0 },
    { x: 3, y: 0 },],
-  [{ x: 0, y: 0 },
-  { x: 0, y: 1 },
-  { x: 0, y: 2 },
-  { x: 0, y: 3 },],
-  [{ x: 0, y: 0 },
-  { x: 1, y: 0 },
-  { x: 2, y: 0 },
-  { x: 3, y: 0 },],
 ];
 
 const SquarePiece = [
@@ -72,41 +65,53 @@ const SquarePiece = [
    { x: 0, y: 1 },
    { x: 1, y: 0 },
    { x: 1, y: 1 },],
+];
+
+const TPiece = [
+  [{ x: 1, y: 0 },
+   { x: 0, y: 1 },
+   { x: 1, y: 1 },
+   { x: 2, y: 1 },],
+   [{ x: -1, y: 0 },
+    { x: -1, y: 1 },
+    { x: -1, y: 2 },
+    { x: 0, y: 1 },],
   [{ x: 0, y: 0 },
-    { x: 0, y: 1 },
     { x: 1, y: 0 },
+    { x: 2, y: 0 },
     { x: 1, y: 1 },],
-  [{ x: 0, y: 0 },
-    { x: 0, y: 1 },
-    { x: 1, y: 0 },
-    { x: 1, y: 1 },],
-  [{ x: 0, y: 0 },
-    { x: 0, y: 1 },
-    { x: 1, y: 0 },
-    { x: 1, y: 1 },],
+  [{ x: 1, y: 0 },
+    { x: 1, y: 1 },
+    { x: 1, y: 2 },
+    { x: 0, y: 1 },],
 ];
 
 const BlockPiece = [
   [{ x: 0, y: 0 },
-   { x: 0, y: 1 },
+   { x: 1, y: 0 },
    { x: 1, y: 1 },
-   { x: 1, y: 2 },],
+   { x: 2, y: 1 },],
    [{ x: 1, y: 0 },
-    { x: 2, y: 0 },
-    { x: 0, y: 1 },
-    { x: 1, y: 1 },],
-  [{ x: 1, y: 0 },
     { x: 1, y: 1 },
     { x: 0, y: 1 },
     { x: 0, y: 2 },],
-  [{ x: 0, y: 0 },
-    { x: 1, y: 0 },
-    { x: 1, y: 1 },
-    { x: 2, y: 1 },],
 ];
 
-const tetrisPieces = [LPiece, IPiece, SquarePiece, BlockPiece];
+const BlockPieceInverted = [
+  [{ x: 1, y: 0 },
+   { x: 2, y: 0 },
+   { x: 0, y: 1 },
+   { x: 1, y: 1 },],
+   [{ x: 0, y: 0 },
+    { x: 0, y: 1 },
+    { x: 1, y: 1 },
+    { x: 1, y: 2 },],
+];
+
+const tetrisPieces = [LPiece, IPiece, SquarePiece, BlockPiece, BlockPieceInverted, TPiece];
 
 const pieceYmovement = 0.25;
+
+let score = 0;
 
 let gameStarted = false;

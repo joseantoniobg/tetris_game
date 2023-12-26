@@ -1,5 +1,5 @@
 class TetraPiece {
-  constructor(board, piece, color, currentAngle, pieceModel) {
+  constructor(board, piece, color, currentAngle, pieceModel, totalPositions) {
     this.squares = [];
     piece.forEach(square => {
       this.squares.push(new Square(color, square.x, square.y));
@@ -10,6 +10,13 @@ class TetraPiece {
     this.board = board;
     this.index = board.tetraPieces.length;
     this.moving = true;
+    this.totalPositions = totalPositions;
+  }
+
+  static getRandomNewPiece() {
+    const pieceModel = Math.floor(Math.random() * tetrisPieces.length);
+    const angle = Math.floor(Math.random() * tetrisPieces[pieceModel].length);
+    return new TetraPiece(board, tetrisPieces[pieceModel][angle].map(p => ({ x: p.x + initialPosition, y: p.y })), getRandomColor(), angle, pieceModel, tetrisPieces[pieceModel].length);
   }
 
   stopMoving(direction) {
@@ -74,7 +81,7 @@ class TetraPiece {
   }
 
   rotate() {
-    this.currentAngle = this.currentAngle === tetrisPieces.length - 1 ? 0 : this.currentAngle + 1;
+    this.currentAngle = this.currentAngle === this.totalPositions - 1 ? 0 : this.currentAngle + 1;
     const currentX = this.squares[0].x;
     const currentY = this.squares[0].y;
     this.squares = [];

@@ -1,6 +1,9 @@
 function handleKeyPress(event) {
   if (event.code === 'Space' || event.key === ' ') {
-    //if (!gameStarted) startGame();
+    if (!gameStarted) {
+      startGame();
+      return;
+    }
     rotatePiece();
     return;
   }

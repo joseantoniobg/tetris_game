@@ -1,24 +1,14 @@
-function getRandomNewPiece() {
-  const angle = Math.floor(Math.random() * tetrisPieces.length);
-  const pieceModel = Math.floor(Math.random() * tetrisPieces.length);
-  return { newPiece: tetrisPieces[pieceModel][angle], angle, color: getRandomColor(), pieceModel };
-}
-
 function increaseSpeed() {
   gameSpeedDelay = gameSpeedDelay - 10;
 }
 
-function getNewPiece() {
-  currentPieceIndex = board.tetraPieces.length;
-  return new TetraPiece(board, nextPiece.newPiece.map(p => ({ x: p.x + initialPosition, y: p.y })), nextPiece.color, nextPiece.angle, nextPiece.pieceModel);
-}
-
 function addNewPiece() {
   if (!nextPiece) {
-    nextPiece = getRandomNewPiece();
+    nextPiece = TetraPiece.getRandomNewPiece();
   }
-  board.tetraPieces.push(getNewPiece());
-  nextPiece = getRandomNewPiece();
+  currentPieceIndex = board.tetraPieces.length;
+  board.tetraPieces.push(nextPiece);
+  nextPiece = TetraPiece.getRandomNewPiece();
 }
 
 function rotatePiece() {
@@ -27,19 +17,16 @@ function rotatePiece() {
 
 function drawBoard(newPice = false) {
   if (!newPice) {
-    //const parent = document.querySelector("#board");
     [...boardElement.children].slice(-4).forEach(boardElement.removeChild.bind(boardElement));
   }
   board.tetraPieces[currentPieceIndex].squares.forEach(square => boardElement.append(square.createSquare(pieceSize, pieceMargin)));
-
-  //board.tetraPieces.map(piece => piece.squares.forEach(square => boardElement.append(square.createSquare(pieceSize, pieceMargin))));
 }
 
 function drawNextPiece() {
   nextPieceElement.innerHTML = '';
-  nextPiece.newPiece.map(square => nextPieceElement.append(new Square(nextPiece.color, square.x, square.y).createSquare(pieceSize, pieceMargin)));
-  const nextPieceHeight = totalPiecelength * nextPiece.newPiece.reduce((a, b) => b.y + 1 > a ? b.y + 1 : a, 0);
-  const nextPieceWidth = totalPiecelength * nextPiece.newPiece.reduce((a, b) => b.x + 1 > a ? b.x + 1 : a, 0);
+  nextPiece.squares.map(square => nextPieceElement.append(square.createSquare(pieceSize, pieceMargin)));
+  const nextPieceHeight = totalPiecelength * nextPiece.squares.reduce((a, b) => b.y + 1 > a ? b.y + 1 : a, 0);
+  const nextPieceWidth = totalPiecelength * (nextPiece.squares.reduce((a, b) => b.x + 1 > a ? b.x + 1 : a, 0) + initialPosition - 1);
   nextPieceElement.style.height = `${nextPieceHeight}px`;
   nextPieceElement.style.width = `${nextPieceWidth}px`;
 }
@@ -60,21 +47,38 @@ function moveRight() {
   board.tetraPieces.forEach(piece => piece.move('right'));
 }
 
+function checkFullLines() {
+  const fullLines = [];
+  for (let i = 0; i < piecesYSize; i++) {
+
+  }
+  return fullLines;
+}
+
 function redrawScreen() {
   clearInterval(gameInterval);
   gameInterval = setInterval(() => {
-    drawBoard();
-    moveDown();
-    if (!board.tetraPieces[currentPieceIndex].moving) {
-      increaseSpeed();
-      addNewPiece();
-      drawBoard(true);
-      drawNextPiece();
+    if(gameStarted) {
+      if (!nextPiece) {
+        resetBoard();
+        addNewPiece();
+        drawNextPiece();
+      }
+      drawBoard();
+      moveDown();
+      if (!board.tetraPieces[currentPieceIndex].moving) {
+        increaseSpeed();
+        addNewPiece();
+        drawBoard(true);
+        drawNextPiece();
+      }
     }
   }, gameSpeedDelay);
 }
 
-resetBoard();
-addNewPiece();
-drawNextPiece();
-redrawScreen();
+function startGame() {
+  gameStarted = true;
+  score = 0;
+  startGameElement.style.display = 'none';
+  redrawScreen();
+}
