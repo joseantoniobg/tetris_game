@@ -17,7 +17,7 @@ class Square {
   move(direction) {
     switch (direction) {
       case 'down':
-        this.y += 0.5;
+        this.y = Math.floor((this.y + pieceYmovement) * 100) / 100;
         break;
       case 'left':
         this.x--;

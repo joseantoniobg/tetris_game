@@ -1,9 +1,11 @@
 class TetraPiece {
-  constructor(board, piece, color, currentAngle) {
+  constructor(board, piece, color, currentAngle, pieceModel) {
     this.squares = [];
     piece.forEach(square => {
       this.squares.push(new Square(color, square.x, square.y));
     });
+    this.color = color;
+    this.pieceModel = pieceModel;
     this.currentAngle = currentAngle;
     this.board = board;
     this.index = board.tetraPieces.length;
@@ -24,11 +26,7 @@ class TetraPiece {
         return true;
       }
 
-      for (const tetraPiece of this.board.tetraPieces) {
-        if (this.index === tetraPiece.index) {
-          continue;
-        }
-
+      for (const tetraPiece of this.board.tetraPieces.slice(0, this.board.tetraPieces.length - 1)) {
         for (const square of tetraPiece.squares) {
           if (this.squares.find(p => p.x === square.x && square.y === p.y + 1)) {
             this.moving = false;
@@ -43,14 +41,9 @@ class TetraPiece {
           return true;
         }
 
-        for (const tetraPiece of this.board.tetraPieces) {
-          if (this.index === tetraPiece.index) {
-            continue;
-          }
-
+        for (const tetraPiece of this.board.tetraPieces.slice(0, this.board.tetraPieces.length - 1)) {
           for (const square of tetraPiece.squares) {
-            if (this.squares.find(p => p.x === square.x + 1 && square.y === p.y)) {
-              this.moving = false;
+            if (this.squares.find(p => Math.ceil(p.x) === square.x + 1 && square.y === Math.ceil(p.y))) {
               return true;
             }
           }
@@ -63,14 +56,9 @@ class TetraPiece {
           return true;
         }
 
-        for (const tetraPiece of this.board.tetraPieces) {
-          if (this.index === tetraPiece.index) {
-            continue;
-          }
-
+        for (const tetraPiece of this.board.tetraPieces.slice(0, this.board.tetraPieces.length - 1)) {
           for (const square of tetraPiece.squares) {
-            if (this.squares.find(p => p.x === square.x - 1 && square.y === p.y)) {
-              this.moving = false;
+            if (this.squares.find(p => Math.ceil(p.x) === square.x - 1 && square.y === Math.ceil(p.y))) {
               return true;
             }
           }
@@ -83,5 +71,15 @@ class TetraPiece {
     if (!this.stopMoving(direction)) {
       this.squares.forEach(piece => piece.move(direction));
     }
+  }
+
+  rotate() {
+    this.currentAngle = this.currentAngle === tetrisPieces.length - 1 ? 0 : this.currentAngle + 1;
+    const currentX = this.squares[0].x;
+    const currentY = this.squares[0].y;
+    this.squares = [];
+    tetrisPieces[this.pieceModel][this.currentAngle].forEach((square) => {
+      this.squares.push(new Square(this.color, square.x + currentX, square.y + currentY));
+    });
   }
 }
