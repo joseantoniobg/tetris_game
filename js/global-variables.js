@@ -26,8 +26,6 @@ let nextPiece;
 let gameInterval;
 let gameSpeedDelay = 300;
 
-let currentPieceIndex = 0;
-
 const LPiece = [
   [{ x: 0, y: 0 },
    { x: 0, y: 1 },
@@ -111,7 +109,7 @@ const tetrisPieces = [LPiece, IPiece, SquarePiece, BlockPiece, BlockPieceInverte
 const pieceYmovement = 0.25;
 
 let score = 0;
+let usedXSpaces = Array(piecesYSize).fill(0);
+let currentPiece;
 
 let gameStarted = false;
-
-let usedXSpaces = Array(piecesYSize).fill(0);

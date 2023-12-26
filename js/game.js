@@ -1,25 +1,25 @@
 function increaseSpeed() {
-  gameSpeedDelay = gameSpeedDelay - 10;
+  gameSpeedDelay -= 10;
 }
 
 function addNewPiece() {
   if (!nextPiece) {
     nextPiece = TetraPiece.getRandomNewPiece();
   }
-  currentPieceIndex = board.tetraPieces.length;
+  currentPiece = nextPiece;
   board.tetraPieces.push(nextPiece);
   nextPiece = TetraPiece.getRandomNewPiece();
 }
 
 function rotatePiece() {
-  board.tetraPieces[currentPieceIndex].rotate();
+  currentPiece.rotate();
 }
 
 function drawCurrentPieceBoard(newPice = false) {
   if (!newPice && boardElement.children.length >= 4) {
     [...boardElement.children].slice(-4).forEach(boardElement.removeChild.bind(boardElement));
   }
-  board.tetraPieces[currentPieceIndex].squares.forEach(square => boardElement.append(square.createSquare(pieceSize, pieceMargin)));
+  currentPiece.squares.forEach(square => boardElement.append(square.createSquare(pieceSize, pieceMargin)));
 }
 
 function drawFullBoard() {
@@ -46,21 +46,21 @@ function resetBoard() {
 }
 
 function moveDown() {
-  board.tetraPieces[currentPieceIndex].move('down');
+  currentPiece.move('down');
 }
 
 function moveAllTheWay() {
-  while (board.tetraPieces[currentPieceIndex].moving) {
-    board.tetraPieces[currentPieceIndex].move('down');
+  while (currentPiece.moving) {
+    currentPiece.move('down');
   }
 }
 
 function moveLeft() {
-  board.tetraPieces[currentPieceIndex].move('left');
+  currentPiece.move('left');
 }
 
 function moveRight() {
-  board.tetraPieces[currentPieceIndex].move('right');
+  currentPiece.move('right');
 }
 
 function redrawScreen() {
@@ -73,7 +73,7 @@ function redrawScreen() {
       }
       drawCurrentPieceBoard();
       moveDown();
-      if (!board.tetraPieces[currentPieceIndex].moving) {
+      if (!currentPiece.moving) {
         verifyFullLine();
         increaseSpeed();
         addNewPiece();
