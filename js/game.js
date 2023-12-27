@@ -1,3 +1,8 @@
+function playSound(src) {
+  new Audio(src).play();
+}
+
+
 function increaseSpeed() {
   gameSpeedDelay -= 10;
 }
@@ -21,7 +26,9 @@ function addNewPiece() {
 }
 
 function rotatePiece() {
-  currentPiece.rotate();
+  if (currentPiece.rotate()) {
+    playSound(audioAssets.rotate);
+  }
 }
 
 function drawCurrentPieceBoard(newPiece = false) {
@@ -67,20 +74,38 @@ function moveDown() {
 }
 
 function moveAllTheWay() {
-  audioDropOff.play();
+  playSound(audioAssets.dropOff);
   while (currentPiece.moving) {
     currentPiece.move('down');
   }
 }
 
 function moveLeft() {
-  audioMove.play();
+  playSound(audioAssets.move);
   currentPiece.move('left');
 }
 
 function moveRight() {
-  audioMove.play();
+  playSound(audioAssets.move);
   currentPiece.move('right');
+}
+
+function playBonusSounds() {
+  switch (piecesInARow) {
+    case 2:
+      playSound(audioAssets.double);
+      break;
+    case 3:
+      playSound(audioAssets.triple);
+      break;
+    case 4:
+      playSound(audioAssets.quadra);
+      setTimeout(() => {
+        playSound(audioAssets.victory);
+      }, 1500);
+      break;
+  }
+  piecesInARow = 0;
 }
 
 function redrawScreen() {
@@ -99,7 +124,7 @@ function redrawScreen() {
     moveDown();
 
     if (!currentPiece.moving) {
-      audioLanding.play();
+      playSound(audioAssets.landing);
       verifyFullLine();
       increaseSpeed();
       addNewPiece();
@@ -123,7 +148,7 @@ async function animateLineExclusion(line) {
 }
 
 function updateScore() {
-  scoreElement.innerHTML = String(score).padStart(5, '0');;
+  scoreElement.innerHTML = String(score).padStart(5, '0');
   pointsTillEnd = 1000;
 }
 
@@ -133,25 +158,25 @@ function resetUsedPositions() {
 }
 
 async function verifyFullLine() {
-  const fullLine = usedXSpaces.findIndex(line => line === piecesXSize);
+  let fullLine = usedXSpaces.findIndex(line => line === piecesXSize);
 
-  if (fullLine === -1) {
-    return;
+  while (fullLine !== -1) {
+    piecesInARow += 1;
+    score += pointsTillEnd * piecesInARow;
+    updateScore();
+    playSound(audioAssets.clearLine);
+    await animateLineExclusion(fullLine);
+    board.tetraPieces.forEach(piece => piece.eliminateSquares(fullLine));
+    board.tetraPieces.filter(piece => piece.squares.length > 0);
+    board.tetraPieces.forEach(piece => piece.reposition(fullLine));
+    usedXSpaces.splice(fullLine, 1);
+    usedXSpaces.unshift(0);
+    resetUsedPositions();
+    drawFullBoard();
+    fullLine = usedXSpaces.findIndex(line => line === piecesXSize);
   }
 
-  score += pointsTillEnd;
-  updateScore();
-  audioClearLine.play();
-  await animateLineExclusion(fullLine);
-  board.tetraPieces.forEach(piece => piece.eliminateSquares(fullLine));
-  board.tetraPieces.filter(piece => piece.squares.length > 0);
-  board.tetraPieces.forEach(piece => piece.reposition(fullLine));
-  usedXSpaces.splice(fullLine, 1);
-  usedXSpaces.unshift(0);
-  resetUsedPositions();
-  drawFullBoard();
-
-  verifyFullLine();
+  playBonusSounds();
 }
 
 function resetValues() {
@@ -177,9 +202,9 @@ function gameOver() {
   boardElement.innerHTML = `<div class="start-game absolute-center" id="startGame">Game over! Seu score foi de ${score} pontos. Pressione espaço para jogar novamente</div>`;
   resetScore();
   gameStarted = false;
-  audioGameOver1.play();
+  playSound(audioAssets.gameOver1);
   setTimeout(() => {
-    audioGameOver2.play();
+    playSound(audioAssets.gameOver2);
   }, 1500);
 }
 

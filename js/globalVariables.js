@@ -14,12 +14,19 @@ const nextPieceElement = document.getElementById('nextPieceContainer');
 const scoreElement = document.getElementById('score');
 const audioElement = document.getElementById('audio');
 
-const audioClearLine = new Audio('../assets/clear.wav');
-const audioDropOff = new Audio('../assets/dropOff.mp3');
-const audioLanding = new Audio('../assets/landing.mp3');
-const audioMove = new Audio('../assets/move.mp3');
-const audioGameOver1 = new Audio('../assets/gameOver.mp3');
-const audioGameOver2 = new Audio('../assets/gameOver2.mp3');
+const audioAssets = {
+  clearLine: '../assets/clear.wav',
+  dropOff: '../assets/dropOff.mp3',
+  landing: '../assets/landing.mp3',
+  move: '../assets/move.mp3',
+  gameOver1: '../assets/gameOver.mp3',
+  gameOver2: '../assets/gameOver2.mp3',
+  rotate: '../assets/rotate.mp3',
+  double: '../assets/double.mp3',
+  triple: '../assets/triple.mp3',
+  quadra: '../assets/quadra.mp3',
+  victory: '../assets/victory.mp3',
+}
 
 const board = {
   piecesXSize,
@@ -138,6 +145,7 @@ const pieceYmovement = 0.25;
 
 let pointsTillEnd = 1000;
 let score = 0;
+let piecesInARow = 0;
 
 let usedXSpaces;
 

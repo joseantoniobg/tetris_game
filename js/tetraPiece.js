@@ -126,7 +126,7 @@ class TetraPiece {
     });
 
     if (this.#checkRotation(squares)) {
-      return;
+      return false;
     }
 
     this.squares = squares;
@@ -134,5 +134,7 @@ class TetraPiece {
     while (this.squares.find(p => p.x >= board.piecesXSize)) {
       this.move('left');
     }
+
+    return true;
   }
 }
