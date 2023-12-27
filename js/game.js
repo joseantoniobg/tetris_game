@@ -67,16 +67,19 @@ function moveDown() {
 }
 
 function moveAllTheWay() {
+  audioDropOff.play();
   while (currentPiece.moving) {
     currentPiece.move('down');
   }
 }
 
 function moveLeft() {
+  audioMove.play();
   currentPiece.move('left');
 }
 
 function moveRight() {
+  audioMove.play();
   currentPiece.move('right');
 }
 
@@ -96,6 +99,7 @@ function redrawScreen() {
     moveDown();
 
     if (!currentPiece.moving) {
+      audioLanding.play();
       verifyFullLine();
       increaseSpeed();
       addNewPiece();
@@ -137,6 +141,7 @@ async function verifyFullLine() {
 
   score += pointsTillEnd;
   updateScore();
+  audioClearLine.play();
   await animateLineExclusion(fullLine);
   board.tetraPieces.forEach(piece => piece.eliminateSquares(fullLine));
   board.tetraPieces.filter(piece => piece.squares.length > 0);
@@ -172,6 +177,10 @@ function gameOver() {
   boardElement.innerHTML = `<div class="start-game absolute-center" id="startGame">Game over! Seu score foi de ${score} pontos. Pressione espaço para jogar novamente</div>`;
   resetScore();
   gameStarted = false;
+  audioGameOver1.play();
+  setTimeout(() => {
+    audioGameOver2.play();
+  }, 1500);
 }
 
 function startGame() {

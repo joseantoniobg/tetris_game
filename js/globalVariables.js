@@ -14,6 +14,13 @@ const nextPieceElement = document.getElementById('nextPieceContainer');
 const scoreElement = document.getElementById('score');
 const audioElement = document.getElementById('audio');
 
+const audioClearLine = new Audio('../assets/clear.wav');
+const audioDropOff = new Audio('../assets/dropOff.mp3');
+const audioLanding = new Audio('../assets/landing.mp3');
+const audioMove = new Audio('../assets/move.mp3');
+const audioGameOver1 = new Audio('../assets/gameOver.mp3');
+const audioGameOver2 = new Audio('../assets/gameOver2.mp3');
+
 const board = {
   piecesXSize,
   piecesYSize,
