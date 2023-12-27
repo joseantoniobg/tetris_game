@@ -1,5 +1,5 @@
 class TetraPiece {
-  constructor(board, piece, color, currentAngle, pieceModel, totalPositions) {
+  constructor(piece, color, currentAngle, pieceModel, totalPositions) {
     this.squares = [];
     piece.forEach(square => {
       this.squares.push(new Square(color, square.x, square.y));
@@ -7,7 +7,6 @@ class TetraPiece {
     this.color = color;
     this.pieceModel = pieceModel;
     this.currentAngle = currentAngle;
-    this.board = board;
     this.index = board.tetraPieces.length;
     this.moving = true;
     this.totalPositions = totalPositions;
@@ -16,7 +15,7 @@ class TetraPiece {
   static getRandomNewPiece() {
     const pieceModel = Math.floor(Math.random() * tetrisPieces.length);
     const angle = Math.floor(Math.random() * tetrisPieces[pieceModel].length);
-    return new TetraPiece(board, tetrisPieces[pieceModel][angle].map(p => ({ x: p.x + initialPosition, y: p.y })), getRandomColor(), angle, pieceModel, tetrisPieces[pieceModel].length);
+    return new TetraPiece(tetrisPieces[pieceModel][angle].map(p => ({ x: p.x + initialPosition, y: p.y })), getRandomColor(), angle, pieceModel, tetrisPieces[pieceModel].length);
   }
 
   eliminateSquares(x) {
@@ -64,7 +63,7 @@ class TetraPiece {
       return true;
     }
 
-    const { tetraPieces, piecesXSize, piecesYSize } = this.board;
+    const { tetraPieces, piecesXSize, piecesYSize } = board;
 
     switch (direction) {
       case 'down':
@@ -115,7 +114,7 @@ class TetraPiece {
       this.squares.push(new Square(this.color, square.x + currentX, square.y + currentY));
     });
 
-    while (this.squares.find(p => p.x >= this.board.piecesXSize)) {
+    while (this.squares.find(p => p.x >= board.piecesXSize)) {
       this.move('left');
     }
   }

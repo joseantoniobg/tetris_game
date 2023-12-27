@@ -24,8 +24,8 @@ function rotatePiece() {
   currentPiece.rotate();
 }
 
-function drawCurrentPieceBoard(newPice = false) {
-  if (!newPice && boardElement.children.length >= 4) {
+function drawCurrentPieceBoard(newPiece = false) {
+  if (!newPiece && boardElement.children.length >= 4) {
     [...boardElement.children].slice(-4).forEach(boardElement.removeChild.bind(boardElement));
   }
   currentPiece?.squares?.forEach(square => boardElement.append(square.createSquare(pieceSize, pieceMargin)));
@@ -82,21 +82,25 @@ function moveRight() {
 
 function redrawScreen() {
   gameInterval = setInterval(async () => {
-    if(gameStarted) {
-      if (!nextPiece) {
-        resetBoard();
-        addNewPiece();
-        drawNextPiece();
-      }
-      drawCurrentPieceBoard();
-      moveDown();
-      if (!currentPiece.moving) {
-        verifyFullLine();
-        increaseSpeed();
-        addNewPiece();
-        drawCurrentPieceBoard(true);
-        drawNextPiece();
-      }
+    if(!gameStarted) {
+      return;
+    }
+
+    if (!nextPiece) {
+      resetBoard();
+      addNewPiece();
+      drawNextPiece();
+    }
+
+    drawCurrentPieceBoard();
+    moveDown();
+
+    if (!currentPiece.moving) {
+      verifyFullLine();
+      increaseSpeed();
+      addNewPiece();
+      drawCurrentPieceBoard(true);
+      drawNextPiece();
     }
   }, gameSpeedDelay);
 }
@@ -120,19 +124,23 @@ function updateScore() {
 }
 
 async function verifyFullLine() {
-  let fullLine = usedXSpaces.findIndex(line => line === piecesXSize);
-  while (fullLine >= 0) {
-    score += pointsTillEnd;
-    updateScore();
-    await animateLineExclusion(fullLine);
-    board.tetraPieces.forEach(piece => piece.eliminateSquares(fullLine));
-    board.tetraPieces.filter(piece => piece.squares.length > 0);
-    board.tetraPieces.forEach(piece => piece.reposition(fullLine));
-    usedXSpaces.splice(fullLine, 1);
-    usedXSpaces.unshift(0);
-    drawFullBoard();
-    fullLine = usedXSpaces.findIndex(line => line === piecesXSize);
+  const fullLine = usedXSpaces.findIndex(line => line === piecesXSize);
+
+  if (fullLine === -1) {
+    return;
   }
+
+  score += pointsTillEnd;
+  updateScore();
+  await animateLineExclusion(fullLine);
+  board.tetraPieces.forEach(piece => piece.eliminateSquares(fullLine));
+  board.tetraPieces.filter(piece => piece.squares.length > 0);
+  board.tetraPieces.forEach(piece => piece.reposition(fullLine));
+  usedXSpaces.splice(fullLine, 1);
+  usedXSpaces.unshift(0);
+  drawFullBoard();
+
+  verifyFullLine();
 }
 
 function resetValues() {
@@ -160,7 +168,7 @@ function gameOver() {
 
 function startGame() {
   resetValues();
+  resetScore();
   gameStarted = true;
-  score = 0;
   redrawScreen();
 }

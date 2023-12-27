@@ -24,7 +24,7 @@ let angle = 0;
 let nextPiece;
 
 let gameInterval;
-let gameSpeedDelay = 300;
+let gameSpeedDelay = 100;
 
 const LPiece = [
   [{ x: 0, y: 0 },

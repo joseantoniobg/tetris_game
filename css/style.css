@@ -71,8 +71,9 @@ h1 {
   height: 30px;
   border-radius: 5px;
   margin: 2px;
-  outline: 2px outset rgba(0, 0, 0, 0.2);
-  outline-offset: -2px;
+  outline: 4px outset rgba(0, 0, 0, 0.4);
+  outline-offset: -4px;
+  box-shadow: 2px 2px 3px 2px rgba(0, 0, 0, 0.3);
 }
 
 .score-value {
