@@ -8,7 +8,7 @@ To experience, simply open the index.html in a modern browser.
 
 ## Instructions
 
-- Space: starts game
+- Space: starts game and rotates pieces clockwise
 - left, right and down arrows: moves the pieces through the board
 - z: imediatlly sets the piece into it`s final destination (final straight position)
 
