@@ -142,16 +142,20 @@ function resetValues() {
   gameSpeedDelay = 300;
   currentPiece = undefined;
   nextPiece = undefined;
-  score = 0;
-  updateScore();
   resetBoard();
   resetNextPiece();
 }
 
+function resetScore() {
+  score = 0;
+  updateScore();
+}
+
 function gameOver() {
   resetValues();
-  gameStarted = false;
   boardElement.innerHTML = `<div class="start-game absolute-center" id="startGame">Game over! Seu score foi de ${score} pontos. Pressione espaço para jogar novamente</div>`;
+  resetScore();
+  gameStarted = false;
 }
 
 function startGame() {
