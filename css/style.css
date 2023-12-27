@@ -41,7 +41,6 @@ h1 {
 }
 
 .overall-info {
-  width: 40%;
   display: flex;
   flex-direction: column;
   justify-content: start;
@@ -86,4 +85,13 @@ h1 {
   align-items: center;
   font-size: 30pt;
   background: linear-gradient(0deg, rgba(2,0,36,1) 0%, rgba(179,179,246,1) 4%, rgba(255,255,255,1) 15%, rgba(255,255,255,1) 51%, rgba(255,255,255,1) 85%, rgba(178,187,255,1) 96%, rgba(10,91,107,1) 100%);
+}
+
+.audio-class {
+  margin-top: 310px;
+}
+
+audio {
+  width: 250px;
+  margin-left: 20px;
 }

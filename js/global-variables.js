@@ -12,6 +12,7 @@ const initialPosition = Math.floor(piecesXSize / 2);
 const boardElement = document.getElementById('board');
 const nextPieceElement = document.getElementById('nextPieceContainer');
 const scoreElement = document.getElementById('score');
+const audioElement = document.getElementById('audio');
 
 const board = {
   piecesXSize,

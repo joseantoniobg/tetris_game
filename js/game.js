@@ -167,6 +167,7 @@ function resetScore() {
 }
 
 function gameOver() {
+  audioElement.pause();
   resetValues();
   boardElement.innerHTML = `<div class="start-game absolute-center" id="startGame">Game over! Seu score foi de ${score} pontos. Pressione espaço para jogar novamente</div>`;
   resetScore();
@@ -174,6 +175,9 @@ function gameOver() {
 }
 
 function startGame() {
+  audioElement.play();
+  audioElement.loop = true;
+  audioElement.volume = 0.3;
   resetValues();
   resetScore();
   gameStarted = true;
