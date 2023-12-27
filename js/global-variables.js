@@ -1,4 +1,4 @@
-const boardWidth = 612;
+const boardWidth = 408;
 const boardHeight = 884;
 const pieceSize = 30;
 const pieceMargin = 2;

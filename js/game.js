@@ -49,7 +49,7 @@ function drawNextPiece() {
   nextPieceElement.innerHTML = '';
   nextPiece.squares?.map(square => nextPieceElement.append(square.createSquare(pieceSize, pieceMargin)));
   const nextPieceHeight = totalPiecelength * nextPiece.squares.reduce((a, b) => b.y + 1 > a ? b.y + 1 : a, 0);
-  const nextPieceWidth = totalPiecelength * (nextPiece.squares.reduce((a, b) => b.x + 1 > a ? b.x + 1 : a, 0) + initialPosition - 1);
+  const nextPieceWidth = totalPiecelength * (nextPiece.squares.reduce((a, b) => b.x + 1 > a ? b.x + 1 : a, 0) + initialPosition - 0.4);
   nextPieceElement.style.height = `${nextPieceHeight}px`;
   nextPieceElement.style.width = `${nextPieceWidth}px`;
 }
@@ -151,7 +151,7 @@ function resetValues() {
 function gameOver() {
   resetValues();
   gameStarted = false;
-  boardElement.innerHTML = `<div class="start-game absolute-center" id="startGame">Game over! Seu score foi de ${score}. Pressione espaço para jogar novamente</div>`;
+  boardElement.innerHTML = `<div class="start-game absolute-center" id="startGame">Game over! Seu score foi de ${score} pontos. Pressione espaço para jogar novamente</div>`;
 }
 
 function startGame() {
