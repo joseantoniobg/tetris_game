@@ -123,6 +123,11 @@ function updateScore() {
   pointsTillEnd = 1000;
 }
 
+function resetUsedPositions() {
+  usedPositions = [];
+  board.tetraPieces.slice(0, board.tetraPieces.length - 1).forEach(piece => piece.squares.forEach(square => usedPositions.push({ x: square.x, y: square.y })));
+}
+
 async function verifyFullLine() {
   const fullLine = usedXSpaces.findIndex(line => line === piecesXSize);
 
@@ -138,6 +143,7 @@ async function verifyFullLine() {
   board.tetraPieces.forEach(piece => piece.reposition(fullLine));
   usedXSpaces.splice(fullLine, 1);
   usedXSpaces.unshift(0);
+  resetUsedPositions();
   drawFullBoard();
 
   verifyFullLine();
@@ -150,6 +156,7 @@ function resetValues() {
   gameSpeedDelay = 300;
   currentPiece = undefined;
   nextPiece = undefined;
+  usedPositions = [];
   resetBoard();
   resetNextPiece();
 }

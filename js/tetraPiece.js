@@ -31,6 +31,7 @@ class TetraPiece {
   #setUsedPositions() {
     this.squares.forEach(p => {
       usedXSpaces[p.y] += 1;
+      usedPositions.push({ x: p.x, y: p.y });
     });
   }
 
@@ -105,14 +106,30 @@ class TetraPiece {
     }
   }
 
+  #checkRotation(squares) {
+    if (usedPositions.find(p => squares.find(s => (Math.ceil(s.x) === p.x && Math.ceil(s.y) === p.y) || (Math.floor(s.x) === p.x && Math.floor(s.y) === p.y)))) {
+      return true;
+    }
+  }
+
+  #getMininumX() {
+    return this.squares.reduce((a, b) => b.x < a ? b.x : a, this.squares[0].x);
+  }
+
   rotate() {
     this.currentAngle = this.currentAngle === this.totalPositions - 1 ? 0 : this.currentAngle + 1;
-    const currentX = this.squares.reduce((a, b) => b.x < a ? b.x : a, this.squares[0].x);
+    const currentX = this.#getMininumX();
     const currentY = this.squares[0].y;
-    this.squares = [];
+    const squares = [];
     tetrisPieces[this.pieceModel][this.currentAngle].forEach((square) => {
-      this.squares.push(new Square(this.color, square.x + currentX, square.y + currentY));
+      squares.push(new Square(this.color, square.x + currentX, square.y + currentY));
     });
+
+    if (this.#checkRotation(squares)) {
+      return;
+    }
+
+    this.squares = squares;
 
     while (this.squares.find(p => p.x >= board.piecesXSize)) {
       this.move('left');

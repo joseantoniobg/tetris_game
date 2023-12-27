@@ -133,6 +133,8 @@ let score = 0;
 
 let usedXSpaces;
 
+let usedPositions;
+
 let currentPiece;
 
 let gameStarted = false;
