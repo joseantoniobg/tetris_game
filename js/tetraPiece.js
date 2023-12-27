@@ -29,41 +29,46 @@ class TetraPiece {
     }
   }
 
-  setUsedPositions() {
+  #setUsedPositions() {
     this.squares.forEach(p => {
       usedXSpaces[p.y] += 1;
     });
   }
 
+  #stopPiece() {
+    this.moving = false;
+    for (const square of this.squares) {
+      square.y = Math.floor(square.y);
+      square.x = Math.floor(square.x);
+    }
+    this.#setUsedPositions();
+    return true;
+  }
+
   checkMoving(tetraPieces) {
     if (this.squares.find(p => p.y + 1 >= piecesYSize)) {
-      this.setUsedPositions();
-      this.moving = false;
-      return true;
+      return this.#stopPiece();
     }
 
     for (const tetraPiece of tetraPieces.slice(0, tetraPieces.length - 1)) {
       for (const square of tetraPiece.squares) {
         if (this.squares.find(p => p.x === square.x && square.y === p.y + 1)) {
-          this.setUsedPositions();
-          this.moving = false;
-          return true;
+          return this.#stopPiece();
         }
       }
     }
   }
 
-  stopMoving(direction) {
-    const { tetraPieces, piecesXSize, piecesYSize } = this.board;
-
+  #stopMoving(direction) {
     if (!this.moving) {
       return true;
     }
 
+    const { tetraPieces, piecesXSize, piecesYSize } = this.board;
+
     switch (direction) {
       case 'down':
-      this.checkMoving(tetraPieces);
-      break;
+        return this.checkMoving(tetraPieces);
 
       case 'left':
         if (this.squares.find(p => p.x - 1 < 0)) {
@@ -96,7 +101,7 @@ class TetraPiece {
   }
 
   move(direction) {
-    if (!this.stopMoving(direction)) {
+    if (!this.#stopMoving(direction)) {
       this.squares.forEach(piece => piece.move(direction));
     }
   }

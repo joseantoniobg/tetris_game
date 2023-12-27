@@ -11,7 +11,7 @@ const initialPosition = Math.floor(piecesXSize / 2);
 
 const boardElement = document.getElementById('board');
 const nextPieceElement = document.getElementById('nextPieceContainer');
-const startGameElement = document.getElementById('startGame');
+const scoreElement = document.getElementById('score');
 
 const board = {
   piecesXSize,
@@ -108,8 +108,11 @@ const tetrisPieces = [LPiece, IPiece, SquarePiece, BlockPiece, BlockPieceInverte
 
 const pieceYmovement = 0.25;
 
+let pointsTillEnd = 1000;
 let score = 0;
-let usedXSpaces = Array(piecesYSize).fill(0);
+
+let usedXSpaces;
+
 let currentPiece;
 
 let gameStarted = false;

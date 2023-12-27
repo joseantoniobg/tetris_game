@@ -10,11 +10,11 @@ function addNewPiece() {
   nextPiece.checkMoving(board.tetraPieces);
 
   if (!nextPiece.moving) {
-    console.log('Game Over!');
     gameOver();
     return;
   }
 
+  pointsTillEnd -= pointsTillEnd > 10 ? 10 : 0;
   currentPiece = nextPiece;
   board.tetraPieces.push(nextPiece);
   nextPiece = TetraPiece.getRandomNewPiece();
@@ -114,10 +114,16 @@ async function animateLineExclusion(line) {
   }
 }
 
+function updateScore() {
+  scoreElement.innerHTML = String(score).padStart(5, '0');;
+  pointsTillEnd = 1000;
+}
+
 async function verifyFullLine() {
   let fullLine = usedXSpaces.findIndex(line => line === piecesXSize);
   while (fullLine >= 0) {
-    score += 100;
+    score += pointsTillEnd;
+    updateScore();
     await animateLineExclusion(fullLine);
     board.tetraPieces.forEach(piece => piece.eliminateSquares(fullLine));
     board.tetraPieces.filter(piece => piece.squares.length > 0);
@@ -132,10 +138,12 @@ async function verifyFullLine() {
 function resetValues() {
   clearInterval(gameInterval);
   board.tetraPieces = [];
-  usedXSpaces = Array(piecesXSize).fill(0);
+  usedXSpaces = Array(piecesYSize).fill(0);
   gameSpeedDelay = 300;
   currentPiece = undefined;
   nextPiece = undefined;
+  score = 0;
+  updateScore();
   resetBoard();
   resetNextPiece();
 }
@@ -143,13 +151,12 @@ function resetValues() {
 function gameOver() {
   resetValues();
   gameStarted = false;
-  //boardElement.append('<div class="start-game absolute-center" id="startGame">Pressione Espaço para iniciar</div>');
+  boardElement.innerHTML = `<div class="start-game absolute-center" id="startGame">Game over! Seu score foi de ${score}. Pressione espaço para jogar novamente</div>`;
 }
 
 function startGame() {
   resetValues();
   gameStarted = true;
   score = 0;
-  startGameElement.style.display = 'none';
   redrawScreen();
 }
