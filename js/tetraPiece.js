@@ -154,7 +154,7 @@ class TetraPiece {
 
     this.squares = squares;
 
-    while (this.squares.find(p => p.x >= board.piecesXSize)) {
+    while (this.squares.find(p => p.x >= piecesXSize)) {
       this.move('left');
     }
 

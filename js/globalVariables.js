@@ -7,7 +7,7 @@ const totalPiecelength = pieceSize + pieceMargin * 2;
 
 const piecesXSize = boardWidth / totalPiecelength;
 const piecesYSize = boardHeight / totalPiecelength;
-const initialPosition = Math.floor(piecesXSize / 2);
+const initialPosition = Math.floor(piecesXSize / 2) - 1;
 
 const boardElement = document.getElementById('board');
 const nextPieceElement = document.getElementById('nextPieceContainer');
