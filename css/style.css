@@ -64,6 +64,10 @@ h1 {
   transform: translate(-50%, -50%);
 }
 
+.translucid {
+  opacity: 0.3;
+}
+
 .square {
   position: absolute;
   width: 30px;

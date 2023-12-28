@@ -1,5 +1,5 @@
 class TetraPiece {
-  constructor(piece, color, currentAngle, pieceModel, totalPositions) {
+  constructor(piece, color, currentAngle, pieceModel, totalPositions, shadow = false) {
     this.squares = [];
     piece.forEach(square => {
       this.squares.push(new Square(color, square.x, square.y));
@@ -10,6 +10,7 @@ class TetraPiece {
     this.index = board.tetraPieces.length;
     this.moving = true;
     this.totalPositions = totalPositions;
+    this.shadow = shadow;
   }
 
   static getRandomNewPiece() {
@@ -37,6 +38,11 @@ class TetraPiece {
 
   #stopPiece() {
     this.moving = false;
+
+    if (this.shadow) {
+      return true;
+    }
+
     for (const square of this.squares) {
       square.y = Math.floor(square.y);
       square.x = Math.floor(square.x);
@@ -114,6 +120,23 @@ class TetraPiece {
 
   #getMininumX() {
     return this.squares.reduce((a, b) => b.x < a ? b.x : a, this.squares[0].x);
+  }
+
+  #getMininumY() {
+    return this.squares.reduce((a, b) => b.y < a ? b.y : a, this.squares[0].y);
+  }
+
+  getShadowPiece() {
+    const shadowPiece = new TetraPiece(this.squares, this.color, this.currentAngle, this.pieceModel, this.totalPositions, true);
+    while (shadowPiece.moving) {
+      shadowPiece.move('down');
+    }
+
+    if (shadowPiece.#getMininumY() - this.#getMininumY() < 10) {
+      return null;
+    }
+
+    return shadowPiece;
   }
 
   rotate() {

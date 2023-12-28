@@ -31,21 +31,34 @@ function rotatePiece() {
   }
 }
 
+function drawShadowPiece() {
+  if (!currentPiece) {
+    return;
+  }
+
+  const shadowPiece = currentPiece.getShadowPiece();
+  shadowPiece?.squares?.forEach(square => boardElement.append(square.createSquare(pieceSize, pieceMargin, false, true)));
+}
+
 function drawCurrentPieceBoard(newPiece = false) {
   if (!newPiece && boardElement.children.length >= 4) {
-    [...boardElement.children].slice(-4).forEach(boardElement.removeChild.bind(boardElement));
+    const elementsToRemove = boardElement.getElementsByClassName('translucid').length > 0 ? 8 : 4;
+    [...boardElement.children].slice(-elementsToRemove).forEach(boardElement.removeChild.bind(boardElement));
   }
   currentPiece?.squares?.forEach(square => boardElement.append(square.createSquare(pieceSize, pieceMargin)));
+  drawShadowPiece();
 }
 
 function drawFullBoard() {
   resetBoard();
   board.tetraPieces.forEach(piece => piece.squares.forEach(square => boardElement.append(square.createSquare(pieceSize, pieceMargin))));
+  drawShadowPiece();
 }
 
 function drawExclusionLine(line) {
   resetBoard();
   board.tetraPieces.forEach(piece => piece.squares.forEach(square => boardElement.append(square.createSquare(pieceSize, pieceMargin, square.y === line))));
+  drawShadowPiece();
 }
 
 function drawNextPiece() {
@@ -209,6 +222,7 @@ function gameOver() {
 }
 
 function startGame() {
+  audioElement.currentTime = 0;
   audioElement.play();
   audioElement.loop = true;
   audioElement.volume = 0.3;
