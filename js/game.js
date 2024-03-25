@@ -42,7 +42,7 @@ function drawShadowPiece() {
 
 function drawCurrentPieceBoard(newPiece = false) {
   if (!newPiece && boardElement.children.length >= 4) {
-    const elementsToRemove = boardElement.getElementsByClassName('translucid').length > 0 ? 8 : 4;
+    const elementsToRemove = boardElement.getElementsByClassName('translucid').length > 0 ? currentPiece.squares.length * 2 : currentPiece.squares.length;
     [...boardElement.children].slice(-elementsToRemove).forEach(boardElement.removeChild.bind(boardElement));
   }
   currentPiece?.squares?.forEach(square => boardElement.append(square.createSquare(pieceSize, pieceMargin)));
